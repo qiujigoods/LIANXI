@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<center>
+		地区: <input type="text" id="city">
+	</center>
+</body>
+</html>
+<script src="jquery-1.12.4.min.js"></script>
+<script>
+	$("#city").on('blur',function(){
+		city=$("#city").val();
+		// alert(city);
+		if (city=='' || $.trim(city).length==0) {
+			alert('内容不能为空');
+			return;
+		};
+		gg=/^[a-zA-Z0-9\u4e00-\u9fa5]+$/i;
+		if (!gg.test(city)) {
+			alert("内容只能输入汉字或者英文字母和数字,");
+		};
+		$.ajax({
+			url:'search.php',		// 在process.php文件中调用天气接口获取天气信息、入库、入redis、返回天所数据到前台（此文件）
+			type:'get',
+			dataType:'json',
+			data:{'city':city},
+			success:function(data){
+				// 展示图表
+				// alert(data);
+				console.log(data);
+			}
+		});
+	})
+</script>
