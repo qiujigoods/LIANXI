@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<form action="" method="post" enctype="multipart/form-data">
+		<input type="file" id="video" value="上传视频"><input type="submit" value="提交">
+	</form>
+</body>
+</html>
+<script src="../duanxin/jquery-1.12.4.min.js"></script>
+<script>
+	var start,end,len,no,bolo,file;
+	$("#video").change(function(){
+		start=0;
+		len=1024*1024;
+		end=start+len;
+		no=1;
+		file=document.getElementById('video').files[0];
+		// console.log(file);
+		bolo=fen();
+		chuan()
+	})
+	function fen(){
+		bolo=file.slice(start,end);
+		start=end;
+		end=start+len;
+		return bolo;
+	}
+	function chuan(){
+		var fd=new FormData();
+		fd.append('bolo',bolo);
+		fd.append('name',file.name);
+		fd.append('no',no);
+		fd.append('zong',Math.ceil(file.size/len));
+		$.ajax({
+			url:'jin.php',
+			data:{'fd':fd},
+			type:'post',
+			processData:false,
+			contentType:false,
+			success:function(){
+
+			}
+		})
+		if (start<file.size) {
+			var t=setTimeout(function(){
+				no++;
+				fen();
+				chuan();
+			},1000);
+		}else{
+			clearTimeout(t);
+		}
+	}
+</script>
